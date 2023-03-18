@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/introFragment">
+    <fragment
+        android:id="@+id/tripListFragment"
+        android:name="com.example.tripi.TripListFragment"
+        android:label="fragment_trip_list"
+        tools:layout="@layout/fragment_trip_list">
+        <action
+            android:id="@+id/action_tripListFragment_to_addTripFragment"
+            app:destination="@id/addTripFragment" />
+        <action
+            android:id="@+id/action_tripListFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_tripListFragment_to_editTripFragment"
+            app:destination="@id/editTripFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTripFragment"
+        android:name="com.example.tripi.AddTripFragment"
+        android:label="fragment_add_trip"
+        tools:layout="@layout/fragment_add_trip" />
+    <fragment
+        android:id="@+id/myProfileFragment"
+        android:name="com.example.tripi.MyProfileFragment"
+        android:label="fragment_my_profile"
+        tools:layout="@layout/fragment_my_profile" >
+        <action
+            android:id="@+id/action_myProfileFragment_to_tripListFragment"
+            app:destination="@id/tripListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="com.example.tripi.IntroFragment"
+        android:label="fragment_intro"
+        tools:layout="@layout/fragment_intro" >
+        <action
+            android:id="@+id/action_introFragment_to_tripListFragment"
+            app:destination="@id/tripListFragment" />
+        <action
+            android:id="@+id/action_introFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_introFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.example.tripi.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registrationFragment_to_tripListFragment"
+            app:destination="@id/tripListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.tripi.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_tripListFragment"
+            app:destination="@id/tripListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTripFragment"
+        android:name="com.example.tripi.EditTripFragment"
+        android:label="fragment_edit_trip"
+        tools:layout="@layout/fragment_edit_trip" />
+</navigation>

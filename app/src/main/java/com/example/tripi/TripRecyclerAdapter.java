@@ -1,5 +1,6 @@
 package com.example.tripi;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,8 +48,7 @@ class TripViewHolder extends RecyclerView.ViewHolder{
         tripLocation.setText(tr.tripLocation);
         tripDescription.setText(tr.tripDescription);
         tripLevel.setText(tr.tripLevel);
-        // TODO: fix image
-        // tripImage.setImageURI(tr.tripImgUrl);
+        Picasso.get().load(tr.tripImgUrl).placeholder(R.drawable.ic_launcher_background).into(tripImage);
     }
 }
 
@@ -64,9 +65,15 @@ public class TripRecyclerAdapter extends RecyclerView.Adapter<TripViewHolder>{
         this.data = data;
     }
 
+    public void setData(List<Trip> data){
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
+
     @NonNull
     @Override
     public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -77,12 +84,12 @@ public class TripRecyclerAdapter extends RecyclerView.Adapter<TripViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
         Trip tr = data.get(position);
-        holder.bind(tr,position);
+        holder.bind(tr, position);
     }
 
     @Override
     public int getItemCount() {
+        if (data == null) return 0;
         return data.size();
     }
-
 }
