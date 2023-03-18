@@ -1,5 +1,6 @@
 package com.example.tripi;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,8 +48,7 @@ class TripViewHolder extends RecyclerView.ViewHolder{
         tripLocation.setText(tr.tripLocation);
         tripDescription.setText(tr.tripDescription);
         tripLevel.setText(tr.tripLevel);
-        // TODO: fix image
-        // tripImage.setImageURI(tr.tripImgUrl);
+        Picasso.get().load(tr.tripImgUrl).into(tripImage);
     }
 }
 

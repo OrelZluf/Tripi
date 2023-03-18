@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,14 +31,7 @@ public class TripListFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        Button newStudentBtn =  (Button) view.findViewById(R.id.newStudentBtn);
         data = Model.instance().getAllTrips();
-        newStudentBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddTripFragment.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -45,12 +39,6 @@ public class TripListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trip_list, container, false);
         list = view.findViewById(R.id.triplistfrag_list);
-
-        return view;
-    }
-
-    @Override
-    public void onStart() {
         data = Model.instance().getAllTrips();
 
         list.setHasFixedSize(true);
@@ -63,17 +51,15 @@ public class TripListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
-
-                Intent intent = new Intent(getContext(), EditTripFragment.class);
-                Bundle params = new Bundle();
-
-                params.putInt("pos", pos);
-                intent.putExtras(params);
-
-                startActivity(intent);
+                Navigation.findNavController(view).navigate(R.id.action_tripListFragment_to_addTripFragment);
             }
         });
 
-        super.onStart();
+        View profileBtn = view.findViewById(R.id.profileBtn);
+        View newTripBtn = view.findViewById(R.id.newTripBtn);
+        profileBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_tripListFragment_to_myProfileFragment));
+        newTripBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_tripListFragment_to_addTripFragment));
+
+        return view;
     }
 }

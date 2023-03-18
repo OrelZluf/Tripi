@@ -11,7 +11,9 @@ public class Model {
 
     private Model(){
         // TODO: remove Mock data
-        addTrip(new Trip("1","דור", "","מצודה","טיול מומלץ למשפחות", "קל"));
+        addTrip(new Trip("1","דור", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Israel-2013-Aerial_21-Masada.jpg/1200px-Israel-2013-Aerial_21-Masada.jpg","מצודה","טיול מומלץ למשפחות", "קל"));
+        addTrip(new Trip("2","דור", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Israel-2013-Aerial_21-Masada.jpg/1200px-Israel-2013-Aerial_21-Masada.jpg","מצודה","טיול מומלץ למשפחות", "קל"));
+        addTrip(new Trip("3","דור", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Israel-2013-Aerial_21-Masada.jpg/1200px-Israel-2013-Aerial_21-Masada.jpg","מצודה","טיול מומלץ למשפחות", "קל"));
     }
 
     List<Trip> data = new LinkedList<>();
