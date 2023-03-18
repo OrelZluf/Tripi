@@ -37,7 +37,7 @@ public class IntroFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (currentUser != null) {
+        if (currentUser == null) {
             Navigation.findNavController(view).navigate(R.id.action_introFragment_to_tripListFragment);
         }
     }
