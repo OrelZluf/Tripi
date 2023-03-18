@@ -94,15 +94,15 @@ public class RegistrationFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 try {
-                                    // Not working
-                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(MyApplication.getAppContext().getContentResolver(), imageUri);
-                                    Model.instance().uploadImage(user.getUid(), bitmap, url-> {
-                                        if (url != null) {
-                                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse(url)).build();
-                                            user.updateProfile(profileUpdates);
-                                            Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
-                                        }
-                                    });
+                                    // // Not working
+                                    // Bitmap bitmap = MediaStore.Images.Media.getBitmap(MyApplication.getAppContext().getContentResolver(), imageUri);
+                                    // Model.instance().uploadImage(user.getUid(), bitmap, url-> {
+                                    //     if (url != null) {
+                                    //         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse(url)).build();
+                                    //         user.updateProfile(profileUpdates);
+                                    //         Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
+                                    //     }
+                                    // });
                                 } catch (IOException e) {
                                     failedRegistration.setVisibility(View.VISIBLE);
                                 }
