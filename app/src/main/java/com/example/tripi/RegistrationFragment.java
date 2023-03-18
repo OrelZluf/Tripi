@@ -5,12 +5,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,31 +49,35 @@ public class RegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
         View button = view.findViewById(R.id.registerButton);
+        TextView failedRegistrationText = (TextView) view.findViewById(R.id.failedRegistration);
 
         button.setOnClickListener((view1)->{
             EditText mail = (EditText)view.findViewById(R.id.editTextTextEmailAddress);
             EditText password = (EditText)view.findViewById(R.id.editPassword);
             EditText dispName = (EditText)view.findViewById(R.id.editTextName);
-            createAccount(mail.getText().toString(), password.getText().toString(), dispName.getText().toString());
+            createAccount(mail.getText().toString(), password.getText().toString(), dispName.getText().toString(), view1, failedRegistrationText);
         });
 
         return view;
     }
 
-    private void createAccount(String email, String password, String dispName) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse("https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Israel-2013-Aerial_21-Masada.jpg/1200px-Israel-2013-Aerial_21-Masada.jpg")).build();
-                            user.updateProfile(profileUpdates);
-                            System.out.println("Success");
-                        } else {
-                            System.out.println("Failure: " + task.getException());
+    private void createAccount(String email, String password, String dispName, View view, TextView failedRegistration) {
+        if (email.isEmpty() || password.isEmpty() || dispName.isEmpty()) failedRegistration.setVisibility(View.VISIBLE);
+        else {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse("https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Israel-2013-Aerial_21-Masada.jpg/1200px-Israel-2013-Aerial_21-Masada.jpg")).build();
+                                user.updateProfile(profileUpdates);
+                                Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
+                            } else {
+                                failedRegistration.setVisibility(View.VISIBLE);
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 }
