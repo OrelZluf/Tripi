@@ -103,6 +103,11 @@ public class RegistrationFragment extends Fragment {
                                     //         Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
                                     //     }
                                     // });
+                                    
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse("https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Israel-2013-Aerial_21-Masada.jpg/1200px-Israel-2013-Aerial_21-Masada.jpg")).build();
+                                    user.updateProfile(profileUpdates);
+                                    Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
+
                                 } catch (IOException e) {
                                     failedRegistration.setVisibility(View.VISIBLE);
                                 }
