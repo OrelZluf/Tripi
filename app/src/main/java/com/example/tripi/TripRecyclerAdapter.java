@@ -48,7 +48,7 @@ class TripViewHolder extends RecyclerView.ViewHolder{
         tripLocation.setText(tr.tripLocation);
         tripDescription.setText(tr.tripDescription);
         tripLevel.setText(tr.tripLevel);
-        Picasso.get().load(tr.tripImgUrl).into(tripImage);
+        Picasso.get().load(tr.tripImgUrl).placeholder(R.drawable.ic_launcher_background).into(tripImage);
     }
 }
 

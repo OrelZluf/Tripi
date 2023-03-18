@@ -1,5 +1,6 @@
 package com.example.tripi.model;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -63,7 +64,6 @@ public class Model {
                     e.printStackTrace();
                 }
 
-                // update local last update
                 Trip.setLocalLastUpdate(time);
                 EventTripListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
@@ -75,5 +75,9 @@ public class Model {
             refreshAllTrips();
             listener.onComplete(null);
         });
+    }
+
+    public void uploadImage(String name, Bitmap bitmap, Listener<String> listener) {
+        firebaseModel.uploadImage(name, bitmap, listener);
     }
 }

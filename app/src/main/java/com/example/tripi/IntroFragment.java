@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tripi.model.FirebaseModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link IntroFragment#newInstance} factory method to
@@ -27,6 +31,15 @@ public class IntroFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            Navigation.findNavController(view).navigate(R.id.action_introFragment_to_tripListFragment);
+        }
     }
 
     @Override
