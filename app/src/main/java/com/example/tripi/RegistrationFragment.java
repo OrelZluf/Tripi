@@ -108,7 +108,7 @@ public class RegistrationFragment extends Fragment {
                                     user.updateProfile(profileUpdates);
                                     Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
 
-                                } catch (IOException e) {
+                                } catch (Exception e) {
                                     failedRegistration.setVisibility(View.VISIBLE);
                                 }
                             } else {
