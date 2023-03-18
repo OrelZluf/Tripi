@@ -65,9 +65,15 @@ public class TripRecyclerAdapter extends RecyclerView.Adapter<TripViewHolder>{
         this.data = data;
     }
 
+    public void setData(List<Trip> data){
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
+
     @NonNull
     @Override
     public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -78,12 +84,12 @@ public class TripRecyclerAdapter extends RecyclerView.Adapter<TripViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
         Trip tr = data.get(position);
-        holder.bind(tr,position);
+        holder.bind(tr, position);
     }
 
     @Override
     public int getItemCount() {
+        if (data == null) return 0;
         return data.size();
     }
-
 }

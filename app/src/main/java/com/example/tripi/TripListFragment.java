@@ -1,65 +1,64 @@
 package com.example.tripi;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import com.example.tripi.databinding.FragmentTripListBinding;
 import com.example.tripi.model.Model;
-import com.example.tripi.model.Trip;
 
-import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the  factory method to
- * create an instance of this fragment.
- */
 public class TripListFragment extends Fragment {
-    List<Trip> data;
-    RecyclerView list;
+    FragmentTripListBinding binding;
     TripRecyclerAdapter adapter;
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
-        data = Model.instance().getAllTrips();
-    }
+    TripListFragmentViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_trip_list, container, false);
-        list = view.findViewById(R.id.triplistfrag_list);
-        data = Model.instance().getAllTrips();
+        binding = FragmentTripListBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        list.setHasFixedSize(true);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new TripRecyclerAdapter(getLayoutInflater(),data);
-        list.setAdapter(adapter);
-
-        adapter.setOnItemClickListener(new TripRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int pos) {
-                Log.d("TAG", "Row was clicked " + pos);
-                Navigation.findNavController(view).navigate(R.id.action_tripListFragment_to_addTripFragment);
-            }
-        });
+        binding.triplistfragList.setHasFixedSize(true);
+        binding.triplistfragList.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new TripRecyclerAdapter(getLayoutInflater(),viewModel.getData().getValue());
+        binding.triplistfragList.setAdapter(adapter);
 
         View profileBtn = view.findViewById(R.id.profileBtn);
         View newTripBtn = view.findViewById(R.id.newTripBtn);
         profileBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_tripListFragment_to_myProfileFragment));
         newTripBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_tripListFragment_to_addTripFragment));
 
+        viewModel.getData().observe(getViewLifecycleOwner(),list->{
+            adapter.setData(list);
+        });
+
+        Model.instance().EventTripListLoadingState.observe(getViewLifecycleOwner(),status->{
+            binding.swipeRefresh.setRefreshing(status == Model.LoadingState.LOADING);
+        });
+
+        binding.swipeRefresh.setOnRefreshListener(()->{
+            reloadData();
+        });
+
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(TripListFragmentViewModel.class);
+    }
+
+    void reloadData(){
+        Model.instance().refreshAllTrips();
     }
 }

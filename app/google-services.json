@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "349011236801",
+    "project_id": "tripi-a7e54",
+    "storage_bucket": "tripi-a7e54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349011236801:android:44442e2c5e48a4aee50140",
+        "android_client_info": {
+          "package_name": "com.example.tripi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "349011236801-45e05m29e48jh0k7drjsbho5uf3lrl68.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4TQnG3FJjLry0xF-Bx0uCWMjSKUlYOyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "349011236801-45e05m29e48jh0k7drjsbho5uf3lrl68.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
