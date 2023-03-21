@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.tripi.MyApplication;
 
-@Database(entities = {Trip.class}, version = 2)
+@Database(entities = {Trip.class}, version = 3)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract TripDao tripDao();
 }

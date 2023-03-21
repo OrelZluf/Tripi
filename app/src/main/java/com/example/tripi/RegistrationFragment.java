@@ -1,9 +1,13 @@
 package com.example.tripi;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -78,11 +82,25 @@ public class RegistrationFragment extends Fragment {
         });
 
         browseBtn.setOnClickListener((view2) -> {
-            galleryLauncher.launch("image/*");
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryActivityResultLauncher.launch(galleryIntent);
+            //galleryLauncher.launch("image/*");
         });
 
         return view;
     }
+
+    ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Uri image_uri = result.getData().getData();
+                        //imageView.setImageURI(image_uri);
+                    }
+                }
+            });
 
     private void createAccount(String email, String password, String dispName, View view, TextView failedRegistration) {
         if (email.isEmpty() || password.isEmpty() || dispName.isEmpty() || imageUri.toString().isEmpty()) failedRegistration.setVisibility(View.VISIBLE);

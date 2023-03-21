@@ -1,6 +1,7 @@
 package com.example.tripi;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,12 +10,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.tripi.databinding.FragmentTripListBinding;
 import com.example.tripi.model.Model;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class TripListFragment extends Fragment {
     FragmentTripListBinding binding;
@@ -49,8 +52,31 @@ public class TripListFragment extends Fragment {
             reloadData();
         });
 
+        View button = view.findViewById(R.id.disconnectButton);
+
+        button.setOnClickListener((view1)->{
+            if (FirebaseAuth.getInstance() != null) {
+                FirebaseAuth.getInstance().signOut();
+                Navigation.findNavController(view1).navigate(R.id.action_tripListFragment_to_introFragment);
+            }
+        });
+
         return view;
     }
+
+    // TODO : request trip advisor API
+//    private void getTripAdvisor(){
+//        OkHttpClient client = new OkHttpClient();
+//
+//        Request request = new Request.Builder()
+//                .url("https://travel-advisor.p.rapidapi.com/attractions/list-by-latlng?longitude=35.0818155&latitude=31.4117257&lunit=km&currency=USD&lang=en_US")
+//                .get()
+//                .addHeader("X-RapidAPI-Key", "ea573a0d8amsh861d48412130674p125478jsne31351e27815")
+//                .addHeader("X-RapidAPI-Host", "travel-advisor.p.rapidapi.com")
+//                .build();
+//
+//        Response response = client.newCall(request).execute();
+//    }
 
     @Override
     public void onAttach(@NonNull Context context) {
