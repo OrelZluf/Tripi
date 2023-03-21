@@ -57,13 +57,15 @@ public class TripListFragment extends Fragment {
                     tr = viewModel.getData().getValue().get(pos);
                 }
 
-                Bundle bundle = new Bundle();
-                bundle.putString("tripId", tr.id);
-                bundle.putString("tripLocation", tr.tripLocation);
-                bundle.putString("tripDescription", tr.tripDescription);
-                bundle.putString("tripLevel", tr.tripLevel);
-                bundle.putString("tripImgUrl", tr.tripImgUrl);
-                Navigation.findNavController(view).navigate(R.id.action_tripListFragment_to_editTripFragment, bundle);
+                if (tr.userId != null && tr.userId.equals(mAuth.getCurrentUser().getUid())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tripId", tr.id);
+                    bundle.putString("tripLocation", tr.tripLocation);
+                    bundle.putString("tripDescription", tr.tripDescription);
+                    bundle.putString("tripLevel", tr.tripLevel);
+                    bundle.putString("tripImgUrl", tr.tripImgUrl);
+                    Navigation.findNavController(view).navigate(R.id.action_tripListFragment_to_editTripFragment, bundle);
+                }
             }
         });
 

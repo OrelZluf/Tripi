@@ -106,7 +106,7 @@ public class RegistrationFragment extends Fragment {
             });
 
     private void createAccount(String email, String password, String dispName, View view, TextView failedRegistration) {
-        if (email.isEmpty() || password.isEmpty() || dispName.isEmpty() || imageUri.toString().isEmpty()) failedRegistration.setVisibility(View.VISIBLE);
+        if (email.isEmpty() || password.isEmpty() || dispName.isEmpty() || imageUri == null || imageUri.toString().isEmpty()) failedRegistration.setVisibility(View.VISIBLE);
         else {
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
