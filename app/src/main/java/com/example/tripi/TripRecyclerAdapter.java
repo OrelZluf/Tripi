@@ -37,7 +37,7 @@ class TripViewHolder extends RecyclerView.ViewHolder{
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int pos = getAdapterPosition();
+                int pos = getLayoutPosition();
                 listener.onItemClick(pos);
             }
         });

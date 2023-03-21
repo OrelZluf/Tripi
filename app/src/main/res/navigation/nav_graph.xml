@@ -18,12 +18,19 @@
         <action
             android:id="@+id/action_tripListFragment_to_editTripFragment"
             app:destination="@id/editTripFragment" />
+        <action
+            android:id="@+id/action_tripListFragment_to_introFragment"
+            app:destination="@id/introFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTripFragment"
         android:name="com.example.tripi.AddTripFragment"
         android:label="fragment_add_trip"
-        tools:layout="@layout/fragment_add_trip" />
+        tools:layout="@layout/fragment_add_trip" >
+        <action
+            android:id="@+id/action_addTripFragment_to_tripListFragment"
+            app:destination="@id/tripListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/myProfileFragment"
         android:name="com.example.tripi.MyProfileFragment"

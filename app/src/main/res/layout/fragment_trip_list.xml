@@ -11,10 +11,21 @@
         android:id="@+id/newTripBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="196dp"
-        android:layout_marginBottom="8dp"
         android:text="טיול חדש"
-        app:layout_constraintEnd_toStartOf="@+id/profileBtn" />
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/disconnectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:background="#000000"
+        android:text="התנתק"
+        app:layout_constraintEnd_toStartOf="@+id/profileBtn"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/newTripBtn"
+        app:layout_constraintTop_toTopOf="@+id/swipeRefresh"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/profileBtn"
@@ -23,7 +34,8 @@
         android:layout_marginStart="196dp"
         android:layout_marginBottom="8dp"
         android:text="פרופיל אישי"
-        app:layout_constraintStart_toEndOf="@+id/newTripBtn" />
+        app:layout_constraintStart_toEndOf="@+id/newTripBtn"
+        tools:ignore="MissingConstraints" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"

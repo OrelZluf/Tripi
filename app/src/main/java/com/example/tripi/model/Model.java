@@ -70,10 +70,9 @@ public class Model {
         });
     }
 
-    public void addTrip(Trip tr, Listener<Void> listener){
+    public void addTrip(Trip tr){
         firebaseModel.addTrip(tr,(Void)->{
             refreshAllTrips();
-            listener.onComplete(null);
         });
     }
 

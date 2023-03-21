@@ -26,6 +26,7 @@ public class Trip {
     public String tripLocation = "";
     public String tripDescription = "";
     public String tripLevel = "";
+    public String userId = "";
     public Long lastUpdated;
 
     static final String NAME = "name";
@@ -37,16 +38,18 @@ public class Trip {
     static final String COLLECTION = "trips";
     static final String LAST_UPDATED = "lastUpdated";
     static final String LOCAL_LAST_UPDATED = "trips_local_last_update";
+    static final String USER_ID = "user_id";
 
     public Trip() {}
 
-    public Trip(String id, String name, String tripImgUrl, String tripLocation, String tripDescription, String tripLevel){
+    public Trip(String id, String name, String tripImgUrl, String tripLocation, String tripDescription, String tripLevel, String userId){
         this.id = id;
         this.name = name;
         this.tripImgUrl = tripImgUrl;
         this.tripLocation = tripLocation;
         this.tripDescription = tripDescription;
         this.tripLevel = tripLevel;
+        this.userId = userId;
     }
 
     public static Trip fromJson(Map<String,Object> json){
@@ -56,8 +59,9 @@ public class Trip {
         String location = (String)json.get(LOCATION);
         String description = (String)json.get(DESCRIPTION);
         String level = (String)json.get(LEVEL);
+        String userId = (String)json.get(USER_ID);
 
-        Trip tr = new Trip(id, name, image_url, location, description, level);
+        Trip tr = new Trip(id, name, image_url, location, description, level, userId);
         try {
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             tr.setLastUpdated(time.getSeconds());
@@ -88,6 +92,7 @@ public class Trip {
         json.put(DESCRIPTION, getTripDescription());
         json.put(LEVEL, getTripLevel());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
+        json.put(USER_ID, getUserId());
         return json;
     }
 
@@ -123,6 +128,15 @@ public class Trip {
     public void setTripLocation(String tripLocation) {
         this.tripLocation = tripLocation;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
 
     public String getTripDescription() {
         return tripDescription;
