@@ -96,7 +96,7 @@ public class RegistrationFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Uri image_uri = result.getData().getData();
+                        imageUri = result.getData().getData();
                         //imageView.setImageURI(image_uri);
                     }
                 }
@@ -112,20 +112,18 @@ public class RegistrationFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 try {
-                                    // // Not working
-                                    // Bitmap bitmap = MediaStore.Images.Media.getBitmap(MyApplication.getAppContext().getContentResolver(), imageUri);
-                                    // Model.instance().uploadImage(user.getUid(), bitmap, url-> {
-                                    //     if (url != null) {
-                                    //         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse(url)).build();
-                                    //         user.updateProfile(profileUpdates);
-                                    //         Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
-                                    //     }
-                                    // });
-                                    
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse("https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Israel-2013-Aerial_21-Masada.jpg/1200px-Israel-2013-Aerial_21-Masada.jpg")).build();
-                                    user.updateProfile(profileUpdates);
-                                    Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
+                                    Model.Listener<String> listener = new Model.Listener<String>() {
+                                        @Override
+                                        public void onComplete(String uploadedUri) {
+                                            if (uploadedUri != null) {
+                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(dispName).setPhotoUri(Uri.parse(uploadedUri)).build();
+                                                user.updateProfile(profileUpdates);
+                                                Navigation.findNavController(view).navigate(R.id.action_registrationFragment_to_tripListFragment);
+                                            }
+                                        }
+                                    };
 
+                                    Model.instance().uploadImage(imageUri, listener);
                                 } catch (Exception e) {
                                     failedRegistration.setVisibility(View.VISIBLE);
                                 }
