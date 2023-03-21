@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -27,12 +26,11 @@ import com.example.tripi.model.Model;
 import com.example.tripi.model.Trip;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.File;
-
 public class AddTripFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     ImageView img;
+    Uri imageUri;
 
     public AddTripFragment() {
         // Required empty public constructor
@@ -55,7 +53,6 @@ public class AddTripFragment extends Fragment {
         EditText levelEt = view.findViewById(R.id.editTextLevel);
         img = view.findViewById(R.id.imageView2);
 
-        // TODO: Add image
         Button browse = view.findViewById(R.id.browseButton);
 
         browse.setOnClickListener(event -> {
@@ -64,13 +61,25 @@ public class AddTripFragment extends Fragment {
         });
 
         saveBtn.setOnClickListener(event -> {
-            Model.instance().addTrip(new Trip(randomUUID().toString(), mAuth.getCurrentUser().getDisplayName(), "image",
-                                                locationEt.getText().toString(),
-                                                descriptionEt.getText().toString(),
-                                                levelEt.getText().toString(),
-                                                mAuth.getCurrentUser().getUid()));
+            try {
+                Model.Listener<String> listener = new Model.Listener<String>() {
+                    @Override
+                    public void onComplete(String uploadedUri) {
+                        if (uploadedUri != null) {
+                            Model.instance().addTrip(new Trip(randomUUID().toString(), mAuth.getCurrentUser().getDisplayName(), uploadedUri,
+                                    locationEt.getText().toString(),
+                                    descriptionEt.getText().toString(),
+                                    levelEt.getText().toString(),
+                                    mAuth.getCurrentUser().getUid()));
+                            Navigation.findNavController(event).navigate(R.id.action_addTripFragment_to_tripListFragment);
+                        }
+                    }
+                };
 
-            Navigation.findNavController(event).navigate(R.id.action_addTripFragment_to_tripListFragment);
+                Model.instance().uploadImage(imageUri, listener);
+            } catch (Exception e) {
+                System.out.println("Failed to add trip");
+            }
         });
 
         // Inflate the layout for this fragment
@@ -83,8 +92,8 @@ public class AddTripFragment extends Fragment {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Uri image_uri = result.getData().getData();
-                    img.setImageURI(image_uri);
+                    imageUri = result.getData().getData();
+                    img.setImageURI(imageUri);
                 }
             }
         });

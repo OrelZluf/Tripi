@@ -48,8 +48,7 @@ public class RegistrationFragment extends Fragment {
     private FirebaseAuth mAuth;
     ActivityResultLauncher<String> galleryLauncher;
     ImageView userImg;
-    Uri image_uri;
-    
+
     public RegistrationFragment() {
         // Required empty public constructor
     }

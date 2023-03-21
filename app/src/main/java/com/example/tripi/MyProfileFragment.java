@@ -70,6 +70,7 @@ public class MyProfileFragment extends Fragment {
         nameEt.setText(mAuth.getCurrentUser().getDisplayName());
         emailEt.setText(mAuth.getCurrentUser().getEmail());
 
+        imageUri = mAuth.getCurrentUser().getPhotoUrl();
         Picasso.get().load(mAuth.getCurrentUser().getPhotoUrl()).into(userImg);
 
         Button browse = view.findViewById(R.id.browseButton);
@@ -95,28 +96,16 @@ public class MyProfileFragment extends Fragment {
                     @Override
                     public void onComplete(String uploadedUri) {
                         if (uploadedUri != null) {
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(nameEt.getText().toString()).setPhotoUri(Uri.parse(uploadedUri)).build();
-
-                            // update display name, image and email
-                            if (!mAuth.getCurrentUser().updateProfile(profileUpdates).isSuccessful() ||
-                                    !mAuth.getCurrentUser().updateEmail(emailEt.getText().toString()).isSuccessful()){
-                                // TODO: print error while update
-                            }
-
-                            // update password
-                            if(!passwordEt.getText().toString().isEmpty()){
-                                if(!mAuth.getCurrentUser().updatePassword(passwordEt.getText().toString()).isSuccessful()){
-                                    // TODO: print error
-                                    String err = "err";
-                                }
-                            }
-
-                            Navigation.findNavController(event).navigate(R.id.action_myProfileFragment_to_tripListFragment);
+                            update(uploadedUri, event);
                         }
                     }
                 };
 
-                Model.instance().uploadImage(imageUri, listener);
+                if (!imageUri.equals(mAuth.getCurrentUser().getPhotoUrl())) {
+                    Model.instance().uploadImage(imageUri, listener);
+                } else {
+                    update(imageUri.toString(), event);
+                }
             } catch (Exception e) {
                 System.out.println("Error uploading image, " + e);
             }
@@ -131,14 +120,34 @@ public class MyProfileFragment extends Fragment {
         return view;
     }
 
+    void update(String uploadedUri, View event) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(nameEt.getText().toString()).setPhotoUri(Uri.parse(uploadedUri)).build();
+
+        // update display name, image and email
+        if (!mAuth.getCurrentUser().updateProfile(profileUpdates).isSuccessful() ||
+                !mAuth.getCurrentUser().updateEmail(emailEt.getText().toString()).isSuccessful()){
+            // TODO: print error while update
+        }
+
+        // update password
+        if(!passwordEt.getText().toString().isEmpty()){
+            if(!mAuth.getCurrentUser().updatePassword(passwordEt.getText().toString()).isSuccessful()){
+                // TODO: print error
+                String err = "err";
+            }
+        }
+
+        Navigation.findNavController(event).navigate(R.id.action_myProfileFragment_to_tripListFragment);
+    }
+
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Uri image_uri = result.getData().getData();
-                        userImg.setImageURI(image_uri);
+                        imageUri = result.getData().getData();
+                        userImg.setImageURI(imageUri);
                     }
                 }
             });

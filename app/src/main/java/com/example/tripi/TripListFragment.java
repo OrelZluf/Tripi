@@ -31,6 +31,7 @@ public class TripListFragment extends Fragment {
     TripListFragmentViewModel viewModel;
     private FirebaseAuth mAuth;
     boolean isMyTrips = false;
+    List<Trip> myTripsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,13 +49,20 @@ public class TripListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
-                Trip tr = viewModel.getData().getValue().get(pos);
-//                TripListFragmentDirections.actionTripListFragmentToEditTripFragment() action = TripListFragmentDirections.actionStudentsListFragmentToBlueFragment(tr.name);
+                Trip tr;
+
+                if (isMyTrips && myTripsList != null) {
+                    tr = myTripsList.get(pos);
+                } else {
+                    tr = viewModel.getData().getValue().get(pos);
+                }
+
                 Bundle bundle = new Bundle();
+                bundle.putString("tripId", tr.id);
                 bundle.putString("tripLocation", tr.tripLocation);
                 bundle.putString("tripDescription", tr.tripDescription);
                 bundle.putString("tripLevel", tr.tripLevel);
-                // TODO: add image
+                bundle.putString("tripImgUrl", tr.tripImgUrl);
                 Navigation.findNavController(view).navigate(R.id.action_tripListFragment_to_editTripFragment, bundle);
             }
         });
@@ -67,11 +75,11 @@ public class TripListFragment extends Fragment {
         try {
             isMyTrips = getArguments().getBoolean("myTrips");
         } catch (Exception e){
-
+            isMyTrips = false;
         }
 
         viewModel.getData().observe(getViewLifecycleOwner(),list->{
-            List<Trip> ltr = list.stream().filter(trip -> {
+            myTripsList = list.stream().filter(trip -> {
                 if(trip.userId!= null) {
                     return trip.userId.equals(mAuth.getCurrentUser().getUid());
                 } else {
@@ -80,7 +88,7 @@ public class TripListFragment extends Fragment {
             }).collect(Collectors.toList());
 
             if (isMyTrips){
-                adapter.setData(ltr);
+                adapter.setData(myTripsList);
             } else {
                 adapter.setData(list);
             }
