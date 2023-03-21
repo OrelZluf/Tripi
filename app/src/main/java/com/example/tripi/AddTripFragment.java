@@ -78,14 +78,14 @@ public class AddTripFragment extends Fragment {
     }
 
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Uri image_uri = result.getData().getData();
-                        img.setImageURI(image_uri);
-                    }
+        new ActivityResultContracts.StartActivityForResult(),
+        new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Uri image_uri = result.getData().getData();
+                    img.setImageURI(image_uri);
                 }
-            });
+            }
+        });
 }

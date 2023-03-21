@@ -6,9 +6,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +19,10 @@ import android.view.ViewGroup;
 
 import com.example.tripi.databinding.FragmentTripListBinding;
 import com.example.tripi.model.Model;
+import com.example.tripi.model.Trip;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
 
 public class TripListFragment extends Fragment {
     FragmentTripListBinding binding;
@@ -34,6 +39,21 @@ public class TripListFragment extends Fragment {
         binding.triplistfragList.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TripRecyclerAdapter(getLayoutInflater(),viewModel.getData().getValue());
         binding.triplistfragList.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new TripRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int pos) {
+                Log.d("TAG", "Row was clicked " + pos);
+                Trip tr = viewModel.getData().getValue().get(pos);
+//                TripListFragmentDirections.actionTripListFragmentToEditTripFragment() action = TripListFragmentDirections.actionStudentsListFragmentToBlueFragment(tr.name);
+                Bundle bundle = new Bundle();
+                bundle.putString("tripLocation", tr.tripLocation);
+                bundle.putString("tripDescription", tr.tripDescription);
+                bundle.putString("tripLevel", tr.tripLevel);
+                // TODO: add image
+                Navigation.findNavController(view).navigate(R.id.action_tripListFragment_to_editTripFragment, bundle);
+            }
+        });
 
         View profileBtn = view.findViewById(R.id.profileBtn);
         View newTripBtn = view.findViewById(R.id.newTripBtn);
