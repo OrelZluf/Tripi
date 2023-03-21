@@ -20,7 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tripi.model.Model;
@@ -45,7 +47,9 @@ public class RegistrationFragment extends Fragment {
     protected Uri imageUri;
     private FirebaseAuth mAuth;
     ActivityResultLauncher<String> galleryLauncher;
-
+    ImageView userImg;
+    Uri image_uri;
+    
     public RegistrationFragment() {
         // Required empty public constructor
     }
@@ -70,10 +74,11 @@ public class RegistrationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
-        View browseBtn = view.findViewById(R.id.profilePictureButton);
+        View browseBtn = view.findViewById(R.id.browseButton);
         View button = view.findViewById(R.id.registerButton);
         TextView failedRegistrationText = (TextView) view.findViewById(R.id.failedRegistration);
-
+        userImg = view.findViewById(R.id.imageView2);
+        
         button.setOnClickListener((view1)->{
             EditText mail = (EditText)view.findViewById(R.id.editTextTextEmailAddress);
             EditText password = (EditText)view.findViewById(R.id.editPassword);
@@ -81,10 +86,9 @@ public class RegistrationFragment extends Fragment {
             createAccount(mail.getText().toString(), password.getText().toString(), dispName.getText().toString(), view1, failedRegistrationText);
         });
 
-        browseBtn.setOnClickListener((view2) -> {
+        browseBtn.setOnClickListener(event -> {
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryActivityResultLauncher.launch(galleryIntent);
-            //galleryLauncher.launch("image/*");
         });
 
         return view;
@@ -97,7 +101,7 @@ public class RegistrationFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         imageUri = result.getData().getData();
-                        //imageView.setImageURI(image_uri);
+                        userImg.setImageURI(imageUri);
                     }
                 }
             });

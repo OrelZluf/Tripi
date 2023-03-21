@@ -23,17 +23,21 @@ import com.example.tripi.model.Trip;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TripListFragment extends Fragment {
     FragmentTripListBinding binding;
     TripRecyclerAdapter adapter;
     TripListFragmentViewModel viewModel;
+    private FirebaseAuth mAuth;
+    boolean isMyTrips = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentTripListBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        mAuth = FirebaseAuth.getInstance();
 
         binding.triplistfragList.setHasFixedSize(true);
         binding.triplistfragList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -60,8 +64,26 @@ public class TripListFragment extends Fragment {
         profileBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_tripListFragment_to_myProfileFragment));
         newTripBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_tripListFragment_to_addTripFragment));
 
+        try {
+            isMyTrips = getArguments().getBoolean("myTrips");
+        } catch (Exception e){
+
+        }
+
         viewModel.getData().observe(getViewLifecycleOwner(),list->{
-            adapter.setData(list);
+            List<Trip> ltr = list.stream().filter(trip -> {
+                if(trip.userId!= null) {
+                    return trip.userId.equals(mAuth.getCurrentUser().getUid());
+                } else {
+                    return false;
+                }
+            }).collect(Collectors.toList());
+
+            if (isMyTrips){
+                adapter.setData(ltr);
+            } else {
+                adapter.setData(list);
+            }
         });
 
         Model.instance().EventTripListLoadingState.observe(getViewLifecycleOwner(),status->{
