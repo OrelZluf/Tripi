@@ -22,6 +22,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class FirebaseModel{
     FirebaseFirestore db;
@@ -66,14 +67,11 @@ public class FirebaseModel{
                 });
     }
 
-    void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener){
+    void uploadImage(Uri filePath, Model.Listener<String> listener){
         StorageReference storageRef = storage.getReference();
-        StorageReference imagesRef = storageRef.child("images/" + name + ".jpg");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
+        StorageReference imagesRef = storageRef.child("images/" + UUID.randomUUID().toString());
 
-        UploadTask uploadTask = imagesRef.putBytes(data);
+        UploadTask uploadTask = imagesRef.putFile(filePath);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {

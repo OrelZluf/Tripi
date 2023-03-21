@@ -29,6 +29,7 @@ public class MyProfileFragment extends Fragment {
     EditText nameEt;
     EditText emailEt;
     EditText passwordEt;
+    Uri imageUri;
 
     private FirebaseAuth mAuth;
 
@@ -58,32 +59,41 @@ public class MyProfileFragment extends Fragment {
         nameEt.setText(mAuth.getCurrentUser().getDisplayName());
         emailEt.setText(mAuth.getCurrentUser().getEmail());
 
-        // TODO: Add image
-        //mAuth.getCurrentUser().updateProfile()
-
         saveBtn.setOnClickListener(event -> {
             nameEt = view.findViewById(R.id.editTextName);
             emailEt = view.findViewById(R.id.editTextTextEmailAddress);
             passwordEt = view.findViewById(R.id.editPassword);
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(nameEt.getText().toString())
-                    .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
-                    .build();
-            // update display name, image and email
-            if (!mAuth.getCurrentUser().updateProfile(profileUpdates).isSuccessful() ||
-                    !mAuth.getCurrentUser().updateEmail(emailEt.getText().toString()).isSuccessful()){
-                // TODO: print error while update
+            try {
+                Model.Listener<String> listener = new Model.Listener<String>() {
+                    @Override
+                    public void onComplete(String uploadedUri) {
+                        if (uploadedUri != null) {
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(nameEt.getText().toString()).setPhotoUri(Uri.parse(uploadedUri)).build();
+
+                            // update display name, image and email
+                            if (!mAuth.getCurrentUser().updateProfile(profileUpdates).isSuccessful() ||
+                                    !mAuth.getCurrentUser().updateEmail(emailEt.getText().toString()).isSuccessful()){
+                                // TODO: print error while update
+                            }
+
+                            // update password
+                            if(!passwordEt.getText().toString().isEmpty()){
+                                if(!mAuth.getCurrentUser().updatePassword(passwordEt.getText().toString()).isSuccessful()){
+                                    // TODO: print error
+                                    String err = "err";
+                                }
+                            }
+
+                            Navigation.findNavController(event).navigate(R.id.action_myProfileFragment_to_tripListFragment);
+                        }
+                    }
+                };
+
+                Model.instance().uploadImage(imageUri, listener);
+            } catch (Exception e) {
+                System.out.println("Error uploading image, " + e);
             }
 
-            // update password
-            if(!passwordEt.getText().toString().isEmpty()){
-                if(!mAuth.getCurrentUser().updatePassword(passwordEt.getText().toString()).isSuccessful()){
-                    // TODO: print error
-                    String err = "err";
-                }
-            }
-
-            Navigation.findNavController(event).navigate(R.id.action_myProfileFragment_to_tripListFragment);
         });
 
         cancelBtn.setOnClickListener(event -> {
