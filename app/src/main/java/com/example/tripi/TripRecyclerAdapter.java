@@ -34,7 +34,6 @@ class TripViewHolder extends RecyclerView.ViewHolder{
         tripLevel = itemView.findViewById(R.id.triplistrow_level);
         tripImage = itemView.findViewById(R.id.triplistrow_img);
 
-        // TODO: edit onClick
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

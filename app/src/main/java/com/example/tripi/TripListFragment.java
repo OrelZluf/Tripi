@@ -2,6 +2,7 @@ package com.example.tripi;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,9 +22,18 @@ import com.example.tripi.databinding.FragmentTripListBinding;
 import com.example.tripi.model.Model;
 import com.example.tripi.model.Trip;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class TripListFragment extends Fragment {
     FragmentTripListBinding binding;
@@ -32,10 +42,16 @@ public class TripListFragment extends Fragment {
     private FirebaseAuth mAuth;
     boolean isMyTrips = false;
     List<Trip> myTripsList;
+    Trip apiTrip;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        try {
+            getTripAdvisor();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         binding = FragmentTripListBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         mAuth = FirebaseAuth.getInstance();
@@ -90,8 +106,14 @@ public class TripListFragment extends Fragment {
             }).collect(Collectors.toList());
 
             if (isMyTrips){
+                if (apiTrip != null) {
+                    myTripsList.add(0, apiTrip);
+                }
                 adapter.setData(myTripsList);
             } else {
+                if (apiTrip != null) {
+                    list.add(0, apiTrip);
+                }
                 adapter.setData(list);
             }
         });
@@ -116,19 +138,43 @@ public class TripListFragment extends Fragment {
         return view;
     }
 
+    class RetrieveFeedTask extends AsyncTask<String, Void, Response> {
+
+        protected Response doInBackground(String... urls) {
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url("https://travel-advisor.p.rapidapi.com/attractions/list-by-latlng?longitude=35.0818155&latitude=31.4117257&lunit=km&currency=USD&lang=en_US")
+                    .get()
+                    .addHeader("X-RapidAPI-Key", "ea573a0d8amsh861d48412130674p125478jsne31351e27815")
+                    .addHeader("X-RapidAPI-Host", "travel-advisor.p.rapidapi.com")
+                    .build();
+
+            try {
+                return client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(Response response) {
+            try {
+                JsonObject jsonObject = new JsonParser().parse(response.body().string()).getAsJsonObject();
+                JsonObject objTrToAdd = (JsonObject) jsonObject.get("data").getAsJsonArray().get(1);
+
+                apiTrip = new Trip(UUID.randomUUID().toString(), "מומלץ!", objTrToAdd.getAsJsonObject("photo").getAsJsonObject("images").getAsJsonObject("small").get("url").getAsString(),objTrToAdd.get("location_string").getAsString(), objTrToAdd.get("name").getAsString(), objTrToAdd.get("ranking_category").getAsString(), "fakeUserId");
+                reloadData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // TODO : request trip advisor API
-//    private void getTripAdvisor(){
-//        OkHttpClient client = new OkHttpClient();
-//
-//        Request request = new Request.Builder()
-//                .url("https://travel-advisor.p.rapidapi.com/attractions/list-by-latlng?longitude=35.0818155&latitude=31.4117257&lunit=km&currency=USD&lang=en_US")
-//                .get()
-//                .addHeader("X-RapidAPI-Key", "ea573a0d8amsh861d48412130674p125478jsne31351e27815")
-//                .addHeader("X-RapidAPI-Host", "travel-advisor.p.rapidapi.com")
-//                .build();
-//
-//        Response response = client.newCall(request).execute();
-//    }
+    private void getTripAdvisor() throws IOException {
+        new RetrieveFeedTask().execute();
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {

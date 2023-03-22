@@ -72,6 +72,7 @@
         android:ems="10"
         android:gravity="top"
         android:text="TextView"
+        android:textAlignment="textEnd"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/DescriptionTitle"
         app:layout_constraintHorizontal_bias="0.992"
