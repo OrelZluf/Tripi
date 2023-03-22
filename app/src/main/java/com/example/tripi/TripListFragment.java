@@ -171,7 +171,6 @@ public class TripListFragment extends Fragment {
         }
     }
 
-    // TODO : request trip advisor API
     private void getTripAdvisor() throws IOException {
         new RetrieveFeedTask().execute();
     }

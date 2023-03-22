@@ -126,14 +126,13 @@ public class MyProfileFragment extends Fragment {
         // update display name, image and email
         if (!mAuth.getCurrentUser().updateProfile(profileUpdates).isSuccessful() ||
                 !mAuth.getCurrentUser().updateEmail(emailEt.getText().toString()).isSuccessful()){
-            // TODO: print error while update
+            System.out.println("Error");
         }
 
         // update password
         if(!passwordEt.getText().toString().isEmpty()){
             if(!mAuth.getCurrentUser().updatePassword(passwordEt.getText().toString()).isSuccessful()){
-                // TODO: print error
-                String err = "err";
+                System.out.println("Error");
             }
         }
 
